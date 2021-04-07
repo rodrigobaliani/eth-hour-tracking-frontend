@@ -26,7 +26,7 @@ export default class Sidebar extends Component {
                         <Link to="/">Home</Link>
                     </Menu.Item>
                     <Menu.Item key="2" icon={<ProjectOutlined />}>
-                        <Link to="/projects">Proyectos</Link>
+                        <Link to="/contracts">Contratos</Link>
                     </Menu.Item>
                     <Menu.Item key="3" icon={<TeamOutlined />}>
                         <Link to="/employees">Empleados</Link>
