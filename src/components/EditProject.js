@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { PageHeader, Table, Tag, Button } from 'antd';
-import { PlusOutlined, EditOutlined } from '@ant-design/icons';
-import AddTaskDrawer from './AddTaskDrawer';
-import EditTaskEmployeesModal from './EditTaskEmployeesModal'
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import AddTaskDrawer from './drawer/AddTaskDrawer';
+import EditTaskEmployeesModal from './modal/EditTaskEmployeesModal'
 
 const { Column } = Table;
 
@@ -64,8 +64,9 @@ export class EditProject extends Component {
                     title="Proyecto ejemplo"
                     style={{ backgroundColor: '#f0f2f5' }}
                     extra={[
-                        <Button key="1" type="primary" shape="circle" icon={<EditOutlined />} size="large" onClick={this.showModal} />,
-                        <Button key="2" type="primary" shape="circle" icon={<PlusOutlined />} size="large" onClick={this.showDrawer} />
+                        <Button key="1" type="primary" shape="circle" icon={<DeleteOutlined />} size="large" />,
+                        <Button key="2" type="primary" shape="circle" icon={<EditOutlined />} size="large" onClick={this.showModal} />,
+                        <Button key="3" type="primary" shape="circle" icon={<PlusOutlined />} size="large" onClick={this.showDrawer} />
                     ]}
                 />
                 <AddTaskDrawer visible={this.state.showDrawer} onCloseDrawer={this.onCloseDrawer} />

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Modal, Transfer, InputNumber, Space } from 'antd'
 
-export class EditTaskEmployeesModal extends Component {
+export class EditContractEmployeesModal extends Component {
 
     state = {
         mockData: [],
@@ -43,7 +43,7 @@ export class EditTaskEmployeesModal extends Component {
     render() {
         return (
             <div>
-                <Modal title="Asignar empleados" visible={this.props.visible} onOk={this.props.onOk} onCancel={this.props.onCancel}>
+                <Modal title="Asignar empleados a contrato" visible={this.props.visible} onOk={this.props.onOk} onCancel={this.props.onCancel}>
                     <Space direction="vertical" size="middle">
                         <Space>
                             <span>Dedicación:</span>
@@ -71,4 +71,4 @@ export class EditTaskEmployeesModal extends Component {
     }
 }
 
-export default EditTaskEmployeesModal
+export default EditContractEmployeesModal
