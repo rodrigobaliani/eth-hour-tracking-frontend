@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { PageHeader, Table, Tag, Button } from 'antd';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import AddContractDrawer from './AddContractDrawer';
+import AddContractDrawer from '../AddContractDrawer';
 
 const { Column } = Table;
 

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Switch, Route } from "react-router-dom";
-import Employees from "./components/Employees"
-import Home from './components/Home'
-import Hours from './components/Hours'
-import Contracts from './components/Contracts'
-import Login from './components/Login'
+import Employees from "./components/pages/Employees"
+import Home from './components/pages/Home'
+import Hours from './components/pages/Hours'
+import Contracts from './components/pages/Contracts'
+import Login from './components/pages/Login'
 import EditContract from './components/EditContract'
 import EditProject from './components/EditProject'
 
