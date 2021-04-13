@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import { PageHeader, Table, Tag, Button } from 'antd';
+import { PageHeader, Tag, Button } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import AddTaskDrawer from './drawer/AddTaskDrawer';
 import EditTaskEmployeesModal from './modal/EditTaskEmployeesModal'
+import TableWithSearch from './utils/TableWithSearch'
 
-const { Column } = Table;
+
 
 export class EditProject extends Component {
 
     state = {
         showDrawer: false,
-        selectedRowKeys: [],
         showModal: false,
     };
 
@@ -50,12 +50,39 @@ export class EditProject extends Component {
     };
 
     render() {
-        const selectedRowKeys = this.state.selectedRowKeys;
-        const rowSelection = {
-            type: 'radio',
-            selectedRowKeys,
-            onChange: this.onSelectChange,
-        };
+
+
+
+        const columns = [
+            {
+                title: 'Tarea',
+                dataIndex: 'task',
+                key: 'task',
+                search: 'true',
+            },
+            {
+                title: 'Descripcion',
+                dataIndex: 'description',
+                key: 'description',
+                search: 'false',
+            },
+            {
+                title: 'Empleados',
+                dataIndex: 'employees',
+                key: 'employees',
+                search: 'false',
+                render: employees => (
+                    <span>
+                        {employees.map(employee => (
+                            <Tag color="blue" key={employee}>
+                                {employee}
+                            </Tag>
+                        ))}
+                    </span>
+                ),
+            },
+        ]
+
         return (
             <div>
                 <PageHeader
@@ -71,23 +98,7 @@ export class EditProject extends Component {
                 />
                 <AddTaskDrawer visible={this.state.showDrawer} onCloseDrawer={this.onCloseDrawer} />
                 <EditTaskEmployeesModal visible={this.state.showModal} onOk={this.handleModalOk} onCancel={this.handleModalCancel} />
-                <Table dataSource={data} rowSelection={rowSelection} >
-                    <Column title="Tarea" dataIndex="task" key="task" />
-                    <Column title="Descripcion" dataIndex="description" key="description" />
-                    <Column
-                        title="Empleados"
-                        dataIndex="employees"
-                        key="employees"
-                        render={tasks => (
-                            <>
-                                {tasks.map(task => (
-                                    <Tag color="blue" key={tasks}>
-                                        {task}
-                                    </Tag>
-                                ))}
-                            </>
-                        )} />
-                </Table>
+                <TableWithSearch dataSource={data} columns={columns} rowType='radio' />
             </div>
         )
     }

@@ -1,23 +1,18 @@
 import React, { Component } from 'react'
-import { PageHeader, Table, Tag, Button, Tabs, Input, Space } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
-import Highlighter from 'react-highlight-words';
+import { PageHeader, Tag, Button, Tabs } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom'
 import AddProjectDrawer from './drawer/AddProjectDrawer';
 import EditEmployeeContractDedication from './modal/EditEmployeeContractDedication'
+import TableWithSearch from './utils/TableWithSearch'
 
-const { Column } = Table;
 const { TabPane } = Tabs;
 
 export class EditContract extends Component {
 
     state = {
         showDrawer: false,
-        selectedRowKeysProjects: [],
-        selectedRowKeysEmployees: [],
         showModal: false,
-        searchText: '',
-        searchedColumn: '',
     };
 
     showDrawer = () => {
@@ -30,16 +25,6 @@ export class EditContract extends Component {
         this.setState({
             showDrawer: false,
         });
-    };
-
-    onProjectSelectChange = selectedRowKeysProjects => {
-        console.log('selectedRowKeys Projects changed: ', selectedRowKeysProjects);
-        this.setState({ selectedRowKeysProjects: selectedRowKeysProjects });
-    };
-
-    onEmployeeSelectChange = selectedRowKeysEmployees => {
-        console.log('selectedRowKeys Employee changed: ', selectedRowKeysEmployees);
-        this.setState({ selectedRowKeysEmployees: selectedRowKeysEmployees });
     };
 
     showModal = () => {
@@ -60,102 +45,27 @@ export class EditContract extends Component {
         });
     };
 
-    getColumnSearchProps = dataIndex => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div style={{ padding: 8 }}>
-                <Input
-                    ref={node => {
-                        this.searchInput = node;
-                    }}
-                    value={selectedKeys[0]}
-                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                    style={{ width: 188, marginBottom: 8, display: 'block' }}
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<SearchOutlined />}
-                        size="small"
-                        style={{ width: 90 }}
-                    >
-                        Buscar
-                    </Button>
-                    <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-                        Reiniciar
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        onFilter: (value, record) =>
-            record[dataIndex]
-                ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                : '',
-        onFilterDropdownVisibleChange: visible => {
-            if (visible) {
-                setTimeout(() => this.searchInput.select(), 100);
-            }
-        },
-        render: text =>
-            this.state.searchedColumn === dataIndex ? (
-                <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                    searchWords={[this.state.searchText]}
-                    autoEscape
-                    textToHighlight={text ? text.toString() : ''}
-                />
-            ) : (
-                text
-            ),
-    });
-
-    handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        this.setState({
-            searchText: selectedKeys[0],
-            searchedColumn: dataIndex,
-        });
-    };
-
-    handleReset = clearFilters => {
-        clearFilters();
-        this.setState({ searchText: '' });
-    };
-
-
-
     render() {
-        const selectedRowKeysProjects = this.state.selectedRowKeysProjects;
-        const rowSelectionProjects = {
-            type: 'radio',
-            selectedRowKeysProjects,
-            onChange: this.onProjectSelectChange,
-        };
-        const selectedRowKeysEmployees = this.state.selectedRowKeysEmployees;
-        const rowSelectionEmployees = {
-            type: 'radio',
-            selectedRowKeysEmployees,
-            onChange: this.onEmployeeSelectChange,
-        };
 
-        const columns = [
+        const columnsProjects = [
             {
                 title: 'Proyecto',
                 dataIndex: 'project',
                 key: 'project',
-                ...this.getColumnSearchProps('project'),
+                search: true,
             },
             {
                 title: 'Descripcion',
                 dataIndex: 'description',
                 key: 'description',
+                search: false,
+
             },
             {
                 title: 'Tareas',
                 dataIndex: 'tasks',
                 key: 'tasks',
+                search: false,
                 render: tasks => (
                     <span>
                         {tasks.map(task => (
@@ -167,9 +77,29 @@ export class EditContract extends Component {
                 ),
             },
         ]
+
+        const columnsEmployees = [
+            {
+                title: 'Empleado',
+                dataIndex: 'employee',
+                key: 'employee',
+                search: true,
+            },
+            {
+                title: 'Descripcion',
+                dataIndex: 'description',
+                key: 'description',
+                search: false,
+            },
+            {
+                title: 'Disponiblidad',
+                dataIndex: 'availability',
+                key: 'availability',
+                search: false,
+            },
+        ]
         return (
             <div>
-
                 <AddProjectDrawer visible={this.state.showDrawer} onCloseDrawer={this.onCloseDrawer} />
                 <EditEmployeeContractDedication visible={this.state.showModal} onOk={this.handleModalOk} onCancel={this.handleModalCancel} />
                 <Tabs defaultActiveKey="1" onChange={this.onChangeTab}>
@@ -187,7 +117,8 @@ export class EditContract extends Component {
                                 <Button key="3" type="primary" shape="circle" icon={<PlusOutlined />} size="large" onClick={this.showDrawer} />
                             ]}
                         />
-                        <Table dataSource={dataProyects} rowSelection={rowSelectionProjects} columns={columns} />
+                        <TableWithSearch dataSource={dataProjects} columns={columnsProjects} rowType='radio' />
+
                     </TabPane>
                     <TabPane tab="Empleados" key="employees">
                         <PageHeader
@@ -199,11 +130,7 @@ export class EditContract extends Component {
                                 <Button key="4" type="primary" shape="circle" icon={<EditOutlined />} size="large" onClick={this.showModal} />
                             ]}
                         />
-                        <Table dataSource={dataEmployees} rowSelection={rowSelectionEmployees} >
-                            <Column title="Empleado" dataIndex="employee" key="employee" />
-                            <Column title="Descripcion" dataIndex="description" key="description" />
-                            <Column title="Dedicación" dataIndex="dedication" key="description" />
-                        </Table>
+                        <TableWithSearch dataSource={dataEmployees} columns={columnsEmployees} rowType='radio' />
                     </TabPane>
                 </Tabs>
             </div>
@@ -217,9 +144,9 @@ for (let i = 0; i < 5; i++) {
 }
 
 
-const dataProyects = [];
+const dataProjects = [];
 for (let i = 0; i < 15; i++) {
-    dataProyects.push({
+    dataProjects.push({
         key: i,
         project: "Proyecto " + i,
         description: "Descripcion proyecto " + i,
@@ -233,7 +160,7 @@ for (let i = 0; i < 15; i++) {
         key: i,
         employee: "Empleado " + i,
         description: "Descripcion empleado " + i,
-        dedication: "100%"
+        availability: "100%"
     });
 }
 

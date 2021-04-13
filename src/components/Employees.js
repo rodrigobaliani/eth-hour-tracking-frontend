@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { PageHeader, Table, Tag, Button } from 'antd';
+import { PageHeader, Tag, Button } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import AddEmployeeDrawer from './drawer/AddEmployeeDrawer'
-
-const { Column } = Table;
+import TableWithSearch from './utils/TableWithSearch'
 
 export class Employees extends Component {
 
@@ -43,20 +42,38 @@ export class Employees extends Component {
         });
     };
 
-
-
-    onSelectChange = selectedRowKeys => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
-    };
-
     render() {
-        const selectedRowKeys = this.state.selectedRowKeys;
-        const rowSelection = {
-            type: 'radio',
-            selectedRowKeys,
-            onChange: this.onSelectChange,
-        };
+
+        const columns = [
+            {
+                title: 'Empleado',
+                dataIndex: 'employee',
+                key: 'employee',
+                search: 'true',
+            },
+            {
+                title: 'Descripcion',
+                dataIndex: 'description',
+                key: 'description',
+                search: 'false',
+            },
+            {
+                title: 'Contratos',
+                dataIndex: 'contracts',
+                key: 'contracts',
+                search: 'false',
+                render: contracts => (
+                    <span>
+                        {contracts.map(contract => (
+                            <Tag color="blue" key={contract}>
+                                {contract}
+                            </Tag>
+                        ))}
+                    </span>
+                ),
+            },
+        ]
+
         return (
             <div>
                 <PageHeader
@@ -70,24 +87,7 @@ export class Employees extends Component {
                     ]}
                 />
                 <AddEmployeeDrawer visible={this.state.showDrawer} onCloseDrawer={this.onCloseDrawer} />
-                <Table dataSource={data} rowSelection={rowSelection} >
-                    <Column title="Empleados" dataIndex="employee" key="employee" />
-                    <Column title="Descripcion" dataIndex="description" key="description" />
-                    <Column
-                        title="Contratos"
-                        dataIndex="contracts"
-                        key="contracts"
-                        render={contracts => (
-                            <>
-                                {contracts.map(contract => (
-                                    <Tag color="blue" key={contracts}>
-                                        {contract}
-                                    </Tag>
-                                ))}
-                            </>
-                        )}
-                    />
-                </Table>
+                <TableWithSearch dataSource={data} columns={columns} rowType='radio' />
             </div>
         )
     }
