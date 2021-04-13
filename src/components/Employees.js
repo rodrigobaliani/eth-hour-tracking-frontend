@@ -49,19 +49,19 @@ export class Employees extends Component {
                 title: 'Empleado',
                 dataIndex: 'employee',
                 key: 'employee',
-                search: 'true',
+                search: true,
             },
             {
                 title: 'Descripcion',
                 dataIndex: 'description',
                 key: 'description',
-                search: 'false',
+                search: false,
             },
             {
                 title: 'Contratos',
                 dataIndex: 'contracts',
                 key: 'contracts',
-                search: 'false',
+                search: false,
                 render: contracts => (
                     <span>
                         {contracts.map(contract => (
